@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Colliding Cars</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+		<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+		<style>
+			html {
+				min-width: 150px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+			/*button {
+				margin-bottom: 10px !important;
+			}*/
+
+		</style>
+	</head>
+	<body onload="reset_game();">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="text-center" style="margin-bottom:20px;">Colliding Cars</h1>
+				</div>
+			</div>
+			<div class="row">
+
+				<div class="col-md-6">
+					<canvas id="display" class="center-block" width="800" height="800" style="margin-bottom: 20px;">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="text-center" style="margin-bottom: 40px;">
+
+						<div class="row">
+							<div class="col-sm-6">
+
+								<div class="input-group" style="width: 100%">
+									<span class="input-group-addon">
+										p = 
+									</span>
+							    <input id="p" type="number" class="form-control" placeholder="p" value="0.32" min="0" max="1">
+							  </div>
+							</div>
+							<div class="col-sm-6">
+								<div class="input-group" style="width: 100%">
+									<span class="input-group-addon">
+										n =
+									</span>
+							    <input id="n" type="number" class="form-control" placeholder="n" min="0" max="500" value="300">
+							  </div>
+							</div>
+						</div>
+						<br>
+
+
+						<center>
+							<label class="radio-inline"><input type="radio" name="numCars" value="2">2 Cars</label>
+							<label class="radio-inline"><input type="radio" name="numCars" value="3" checked>3 Cars</label>
+							<label class="radio-inline"><input type="radio" name="numCars" value="4">4 Cars</label>
+						</center>
+						
+						<br>
+						<br>
+
+						<div class="btn-group" style="width: 100%">
+							<button class="btn btn-default btn-lg" onclick="reset_game()" style="width: 50%">Reset</button>
+							<button class="btn btn-default btn-lg" onclick="play()" style="width: 50%">Play</button>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div id="calculator" style="width: 100%; height: 500px;"></div>
+				</div>
+
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
