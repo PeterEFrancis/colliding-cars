@@ -22,6 +22,8 @@ var intervalId = 0;
 
 var movement = [undefined, [], [], [], []];
 
+var num_colors = [];
+
 var num_cars;
 
 
@@ -60,13 +62,43 @@ function get_random_color() {
 }
 
 
+function get_random_color2(num) {
+	let r = Math.random();
+	let t = (num / num_squares >= num_squares / 2);
+	let l = (num % num_squares <= num_squares / 2);
+	
+	if (t && l) {
+		if (r < 1/2) return SOUTH;
+		        else return ANTI;
+	} else if (t && !l) {
+		if (r < 1/2) return EAST;
+		        else return ANTI;
+	} else if (!t && l) {
+		if (r < 1/2) return SOUTH;
+			      else return DIAG;
+	} else if (!t && !l) {
+		if (r < 1/2) return EAST;
+			      else return DIAG;
+	}
+}
+
+
+//
+//    SD   ED
+// 
+//    SA   EA
+// 
+
+
 function randomize() {
 
 	reset_game();
 
 	for (let i = 0; i < num_squares ** 2; i++) {
 		if (Math.random() < p) {
-			board[i] = get_random_color();
+			let color = get_random_color(i);
+			board[i] = color;
+			num_colors[color] += 1;
 		} else {
 			board[i] = 0;
 		}
@@ -120,12 +152,12 @@ function update_display() {
 
 	//update desmos
 	let points = [];
-	let max = Math.max(...movement.map(x => Math.max(...x)));
+	// let max = Math.max(...movement.map(x => Math.max(...x)));
 	for (let j = 1; j <= num_cars; j++) {
 		if (movement[j].length > 0) {
 			points = [];
 			for (let i = 0 ; i < movement[j].length; i++) {
-				points.push([i, movement[j][i] / max]);
+				points.push([i, movement[j][i] / num_colors[j]]);
 			}
 			let latex = '[' + points.map(p => '(' + p[0] + ',' + p[1] + ')') + ']';
 			calculator.setExpression({
@@ -160,6 +192,7 @@ function reset_game() {
 	}
 
 	movement = [[], [], [], [], []];
+	num_colors = [0, 1, 1, 1, 1];
 
 	clear_display();
 
@@ -167,8 +200,6 @@ function reset_game() {
 
 	clearInterval(intervalId);
 }
-
-
 
 
 
@@ -192,19 +223,26 @@ function step() {
 			let c = i % num_squares;
 			if (dir == EAST) {
 				c = (c + 1) % num_squares;
+				if (c == 0) r += 1;
 			}
 			if (dir == SOUTH) {
 				r = (r + 1) % num_squares;
+				if (r == 0) c += 1;
 			}
 			if (dir == DIAG) {
-				r = (r + 1) % num_squares;
 				c = (c + 1) % num_squares;
+				if (c == 0) r += 1;
+				r = (r + 1) % num_squares;
 			}
 			if (dir == ANTI) {
-				r = (r - 1 + num_squares) % num_squares;
 				c = (c + 1 + num_squares) % num_squares;
+				if (c == 0) r += 1;
+				r = (r - 1 + num_squares) % num_squares;
 			}
-			
+
+			r = (r + num_squares) % num_squares;
+			c = (c + num_squares) % num_squares;
+
 			let new_i = r * num_squares + c;
 			if (board[new_i] == 0) {
 				new_board[new_i] = dir;
